@@ -1,15 +1,24 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "vite-react-cfw",
-  "main": "./src/worker/index.ts",
-  "compatibility_date": "2025-10-08",
-  "compatibility_flags": ["nodejs_compat"],
-  "observability": {
-    "enabled": true
-  },
-  "upload_source_maps": true,
-  "assets": {
-    "directory": "./dist/client",
-    "not_found_handling": "single-page-application"
-  }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "vite-react-cfw",
+	"main": "./src/worker/index.ts",
+	"compatibility_date": "2025-10-08",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true,
+	"assets": {
+		"directory": "./dist/client",
+		"not_found_handling": "single-page-application"
+	},
+	"d1_databases": [
+		{
+			"binding": "d1_vite_react",
+			"database_name": "d1-vite-react",
+			"database_id": "61d8cad0-5f5d-4fee-b552-6abb228ec242",
+		}
+	]
 }
