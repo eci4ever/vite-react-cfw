@@ -1,89 +1,101 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Users, Database, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
-interface Customer {
-  CustomerId: number;
-  CompanyName: string;
-  ContactName: string;
-}
-
 function Home() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/customers");
-      const data = await response.json();
-      setCustomers(data);
-    } catch (error) {
-      setError("Error fetching customers");
-      console.error("Error fetching customers:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold underline mb-4">Hello World</h1>
-      <Button onClick={fetchData} disabled={loading}>
-        {loading ? "Loading..." : "Fetch Customers"}
-      </Button>
+    <div className="p-8 max-w-4xl mx-auto">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">User Management System</h1>
+        <p className="text-xl text-gray-600 mb-8">
+          Built with React, TanStack Router, and Cloudflare Workers
+        </p>
+        <Link to="/users">
+          <Button size="lg" className="text-lg px-8 py-3">
+            <Users className="h-5 w-5 mr-2" />
+            Manage Users
+          </Button>
+        </Link>
+      </div>
 
-      {error && (
-        <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              User CRUD
+            </CardTitle>
+            <CardDescription>
+              Full Create, Read, Update, Delete operations for user data
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Add new users</li>
+              <li>• View user list</li>
+              <li>• Edit user details</li>
+              <li>• Delete users</li>
+            </ul>
+          </CardContent>
+        </Card>
 
-      {customers.length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-4">
-            Customers ({customers.length})
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Company Name
-                  </th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Contact Name
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {customers.map((customer) => (
-                  <tr key={customer.CustomerId}>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                      {customer.CustomerId}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                      {customer.CompanyName}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                      {customer.ContactName}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5" />
+              Drizzle ORM
+            </CardTitle>
+            <CardDescription>
+              Type-safe database operations with Drizzle ORM
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• Type-safe queries</li>
+              <li>• SQLite database</li>
+              <li>• Schema validation</li>
+              <li>• Cloudflare D1</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5" />
+              Modern Stack
+            </CardTitle>
+            <CardDescription>
+              Built with the latest React and web technologies
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• React 19</li>
+              <li>• TanStack Router</li>
+              <li>• React Query</li>
+              <li>• Tailwind CSS</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="mt-12 text-center">
+        <p className="text-gray-500">
+          Click "Manage Users" to start working with the user database
+        </p>
+      </div>
     </div>
   );
 }

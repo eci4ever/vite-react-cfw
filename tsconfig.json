@@ -8,7 +8,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/react-app/*"]
+      "@/*": ["./src/react-app/*"],
+      "@worker/*": ["./src/worker/*"],
+      "@db/*": ["./src/db/*"]
     }
   }
 }
