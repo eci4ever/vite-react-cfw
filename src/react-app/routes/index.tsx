@@ -7,13 +7,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Users, Database, Zap } from "lucide-react";
+import { Users, Database, Zap, LogIn } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 function Home() {
+  const { data: session } = authClient.useSession();
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="text-center mb-12">
@@ -21,12 +30,31 @@ function Home() {
         <p className="text-xl text-gray-600 mb-8">
           Built with React, TanStack Router, and Cloudflare Workers
         </p>
-        <Link to="/users">
-          <Button size="lg" className="text-lg px-8 py-3">
-            <Users className="h-5 w-5 mr-2" />
-            Manage Users
-          </Button>
-        </Link>
+        {session ? (
+          <div className="space-y-4">
+            <p className="text-lg text-green-600">
+              Welcome back, {session.user.name}!
+            </p>
+            <Link to="/users">
+              <Button size="lg" className="text-lg px-8 py-3">
+                <Users className="h-5 w-5 mr-2" />
+                Manage Users
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <p className="text-lg text-gray-600">
+              Please sign in to access the user management system
+            </p>
+            <Link to="/auth">
+              <Button size="lg" className="text-lg px-8 py-3">
+                <LogIn className="h-5 w-5 mr-2" />
+                Sign In
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -54,18 +82,18 @@ function Home() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Database className="h-5 w-5" />
-              Drizzle ORM
+              Better Auth
             </CardTitle>
             <CardDescription>
-              Type-safe database operations with Drizzle ORM
+              Secure authentication with Better Auth
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Type-safe queries</li>
-              <li>• SQLite database</li>
-              <li>• Schema validation</li>
-              <li>• Cloudflare D1</li>
+              <li>• Email & password auth</li>
+              <li>• Session management</li>
+              <li>• Protected routes</li>
+              <li>• User registration</li>
             </ul>
           </CardContent>
         </Card>
@@ -93,7 +121,9 @@ function Home() {
 
       <div className="mt-12 text-center">
         <p className="text-gray-500">
-          Click "Manage Users" to start working with the user database
+          {session
+            ? "Click 'Manage Users' to start working with the user database"
+            : "Sign in to access the user management features"}
         </p>
       </div>
     </div>

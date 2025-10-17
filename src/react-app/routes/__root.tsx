@@ -1,12 +1,26 @@
 import { createRootRoute, Outlet, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Home, Users } from "lucide-react";
+import { Home, Users, LogIn, LogOut, User } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createRootRoute({
   component: Root,
 });
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 function Root() {
+  const { data: session } = authClient.useSession();
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b border-gray-200">
@@ -22,12 +36,33 @@ function Root() {
                   Home
                 </Button>
               </Link>
-              <Link to="/users">
-                <Button variant="ghost" size="sm">
-                  <Users className="h-4 w-4 mr-2" />
-                  Users
-                </Button>
-              </Link>
+              {session && (
+                <Link to="/users">
+                  <Button variant="ghost" size="sm">
+                    <Users className="h-4 w-4 mr-2" />
+                    Users
+                  </Button>
+                </Link>
+              )}
+              {session ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    <User className="h-4 w-4 inline mr-1" />
+                    {session.user.name}
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <Link to="/auth">
+                  <Button variant="ghost" size="sm">
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Sign In
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>

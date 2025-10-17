@@ -1,0 +1,78 @@
+### Sign up with email and password
+POST http://localhost:5173/api/auth/sign-up/email
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "name": "Test User"
+}
+
+### Login with email and password
+POST http://localhost:5173/api/auth/sign-in/email
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### Get user session
+GET http://localhost:5173/api/auth/get-session
+
+### Sign up with different user
+POST http://localhost:5173/api/auth/sign-up/email
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123",
+  "name": "Admin User"
+}
+
+### Login with different user
+POST http://localhost:5173/api/auth/sign-in/email
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Test invalid login (wrong password)
+POST http://localhost:5173/api/auth/sign-in/email
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "wrongpassword"
+}
+
+### Test invalid login (non-existent user)
+POST http://localhost:5173/api/auth/sign-in/email
+Content-Type: application/json
+
+{
+  "email": "nonexistent@example.com",
+  "password": "password123"
+}
+
+### Test duplicate email registration
+POST http://localhost:5173/api/auth/sign-up/email
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123",
+  "name": "Duplicate User"
+}
+
+### Sign out
+POST http://localhost:5173/api/auth/sign-out
+
+### Test protected users endpoint (should fail without auth)
+GET http://localhost:5173/api/users
+
+### Test protected users endpoint with session cookie (copy cookie from login response)
+GET http://localhost:5173/api/users
+Cookie: better-auth.session_token=YOUR_SESSION_TOKEN_HERE

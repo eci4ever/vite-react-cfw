@@ -2,12 +2,16 @@ import { Hono } from "hono";
 import { createDb } from "../../db/db";
 import { usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
+import { requireAuth } from "../middleware/auth";
 
 type Bindings = {
   d1_vite_react: D1Database;
 };
 
 const usersRoute = new Hono<{ Bindings: Bindings }>();
+
+// Apply authentication middleware to all routes
+usersRoute.use("*", requireAuth);
 
 usersRoute.get("/", async (c) => {
   try {

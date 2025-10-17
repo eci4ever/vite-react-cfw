@@ -18,5 +18,8 @@
       "database_name": "d1-vite-react",
       "database_id": "61d8cad0-5f5d-4fee-b552-6abb228ec242"
     }
-  ]
+  ],
+  "vars": {
+    "BETTER_AUTH_SECRET": "82zuBxij1IgS8q8KfrVHLaNcTpgbFzDQ"
+  }
 }

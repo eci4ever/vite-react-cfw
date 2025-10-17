@@ -8,6 +8,13 @@
       "when": 1760532479804,
       "tag": "0000_dear_maximus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1760670135943,
+      "tag": "0001_closed_morlocks",
+      "breakpoints": true
     }
   ]
 }
