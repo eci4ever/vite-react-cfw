@@ -9,7 +9,6 @@ type Bindings = {
 
 const usersRoute = new Hono<{ Bindings: Bindings }>();
 
-// GET all users
 usersRoute.get("/", async (c) => {
   try {
     const db = createDb(c.env.d1_vite_react);
