@@ -25,67 +25,72 @@ export const Route = createFileRoute("/users")({
 });
 
 interface User {
-  id: number;
+  id: string;
   name: string;
-  age: number;
   email: string;
+  emailVerified: boolean;
+  image?: string | null;
+  role?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface UserFormData {
   name: string;
-  age: number;
   email: string;
+  password: string;
+  role: string;
 }
 
-// API functions
+// API functions using Better Auth admin client
 const fetchUsers = async (): Promise<User[]> => {
-  const response = await fetch("/api/users");
-  if (!response.ok) {
+  const response = await authClient.admin.listUsers({
+    query: {},
+  });
+  if (!response.data) {
     throw new Error("Failed to fetch users");
   }
-  return response.json();
+  // The response.data contains users array and pagination info
+  return response.data.users || [];
 };
 
 const createUser = async (data: UserFormData): Promise<User> => {
-  const response = await fetch("/api/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+  const response = await authClient.admin.createUser({
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    role: data.role as "user" | "admin",
   });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to create user");
+  if (!response.data) {
+    throw new Error(response.error?.message || "Failed to create user");
   }
-  return response.json();
+  return response.data.user;
 };
 
 const updateUser = async ({
   id,
   ...data
-}: UserFormData & { id: number }): Promise<User> => {
-  const response = await fetch(`/api/users/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
+}: UserFormData & { id: string }): Promise<User> => {
+  const response = await authClient.admin.updateUser({
+    userId: id,
+    data: {
+      name: data.name,
+      email: data.email,
+      role: data.role as "user" | "admin",
     },
-    body: JSON.stringify(data),
   });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to update user");
+  if (!response.data) {
+    throw new Error(response.error?.message || "Failed to update user");
   }
-  return response.json();
+  return response.data;
 };
 
-const deleteUser = async (userId: number): Promise<void> => {
-  const response = await fetch(`/api/users/${userId}`, {
-    method: "DELETE",
+const deleteUser = async (userId: string): Promise<void> => {
+  const response = await authClient.admin.removeUser({
+    userId: userId,
   });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to delete user");
+  if (!response.data) {
+    throw new Error(response.error?.message || "Failed to delete user");
   }
 };
 
@@ -93,11 +98,12 @@ function Users() {
   const queryClient = useQueryClient();
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
-    age: 0,
     email: "",
+    password: "",
+    role: "user",
   });
 
   // Queries
@@ -116,7 +122,7 @@ function Users() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       setShowCreateForm(false);
-      setFormData({ name: "", age: 0, email: "" });
+      setFormData({ name: "", email: "", password: "", role: "user" });
     },
   });
 
@@ -125,7 +131,7 @@ function Users() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       setEditingUser(null);
-      setFormData({ name: "", age: 0, email: "" });
+      setFormData({ name: "", email: "", password: "", role: "user" });
     },
   });
 
@@ -150,7 +156,7 @@ function Users() {
     }
   };
 
-  const handleDelete = (userId: number) => {
+  const handleDelete = (userId: string) => {
     deleteMutation.mutate(userId);
   };
 
@@ -158,21 +164,22 @@ function Users() {
     setEditingUser(user);
     setFormData({
       name: user.name,
-      age: user.age,
       email: user.email,
+      password: "", // Don't populate password for editing
+      role: user.role || "user",
     });
   };
 
   const cancelEdit = () => {
     setEditingUser(null);
     setShowCreateForm(false);
-    setFormData({ name: "", age: 0, email: "" });
+    setFormData({ name: "", email: "", password: "", role: "user" });
   };
 
   const startCreate = () => {
     setShowCreateForm(true);
     setEditingUser(null);
-    setFormData({ name: "", age: 0, email: "" });
+    setFormData({ name: "", email: "", password: "", role: "user" });
   };
 
   if (isLoading) {
@@ -236,23 +243,6 @@ function Users() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="age">Age *</Label>
-                <Input
-                  id="age"
-                  type="number"
-                  min="0"
-                  max="120"
-                  value={formData.age || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      age: parseInt(e.target.value) || 0,
-                    })
-                  }
-                  placeholder="Enter age"
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="email">Email *</Label>
                 <Input
                   id="email"
@@ -264,6 +254,39 @@ function Users() {
                   placeholder="Enter email address"
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">
+                  Password{" "}
+                  {!editingUser ? "*" : "(leave blank to keep current)"}
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  placeholder={
+                    editingUser ? "Enter new password" : "Enter password"
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="role">Role *</Label>
+                <select
+                  id="role"
+                  value={formData.role}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
             </div>
             <div className="flex gap-2">
               <Button
@@ -271,7 +294,7 @@ function Users() {
                 disabled={
                   !formData.name ||
                   !formData.email ||
-                  formData.age <= 0 ||
+                  (!editingUser && !formData.password) ||
                   createMutation.isPending ||
                   updateMutation.isPending
                 }
@@ -312,10 +335,13 @@ function Users() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium">ID</th>
+                    {/* <th className="text-left py-3 px-4 font-medium">ID</th> */}
                     <th className="text-left py-3 px-4 font-medium">Name</th>
-                    <th className="text-left py-3 px-4 font-medium">Age</th>
                     <th className="text-left py-3 px-4 font-medium">Email</th>
+                    <th className="text-left py-3 px-4 font-medium">Role</th>
+                    <th className="text-left py-3 px-4 font-medium">
+                      Verified
+                    </th>
                     <th className="text-right py-3 px-4 font-medium">
                       Actions
                     </th>
@@ -324,10 +350,31 @@ function Users() {
                 <tbody>
                   {users.map((user) => (
                     <tr key={user.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">{user.id}</td>
+                      {/* <td className="py-3 px-4">{user.id}</td> */}
                       <td className="py-3 px-4 font-medium">{user.name}</td>
-                      <td className="py-3 px-4">{user.age}</td>
                       <td className="py-3 px-4 text-gray-600">{user.email}</td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            user.role === "admin"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {user.role === "admin" ? "Admin" : "User"}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            user.emailVerified
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {user.emailVerified ? "Verified" : "Unverified"}
+                        </span>
+                      </td>
                       <td className="py-3 px-4">
                         <div className="flex justify-end gap-2">
                           <Button

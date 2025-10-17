@@ -32,6 +32,15 @@ export async function requireAuth(
       emailAndPassword: {
         enabled: true,
       },
+      user: {
+        additionalFields: {
+          role: {
+            type: "string",
+            defaultValue: "user",
+            required: true,
+          },
+        },
+      },
       trustedOrigins: [baseURL],
       baseURL: baseURL,
       secret:

@@ -29,6 +29,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const session = Route.useLoaderData();
+  console.log("session", session);
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="text-center mb-12">

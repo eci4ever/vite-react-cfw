@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createDb } from "../../db/db";
+import { admin as adminPlugin } from "better-auth/plugins";
 
 type Bindings = {
   d1_vite_react: D1Database;
@@ -25,6 +26,20 @@ authRoute.all("/api/auth/*", async (c) => {
     emailAndPassword: {
       enabled: true,
     },
+    user: {
+      additionalFields: {
+        role: {
+          type: "string",
+          defaultValue: "user",
+          required: true,
+        },
+      },
+    },
+    plugins: [
+      adminPlugin({
+        adminRoles: ["admin"],
+      }),
+    ],
     trustedOrigins: [baseURL],
     baseURL: baseURL,
     secret: c.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
