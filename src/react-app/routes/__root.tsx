@@ -4,6 +4,10 @@ import { Home, Users, LogIn, LogOut, User } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createRootRoute({
+  loader: async () => {
+    const { data: session } = await authClient.getSession();
+    return session;
+  },
   component: Root,
 });
 
@@ -14,7 +18,7 @@ interface User {
 }
 
 function Root() {
-  const { data: session } = authClient.useSession();
+  const session = Route.useLoaderData();
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -48,7 +52,7 @@ function Root() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600">
                     <User className="h-4 w-4 inline mr-1" />
-                    {session.user.name}
+                    <Link to="/auth">{session.user.name}</Link>
                   </span>
                   <Button variant="ghost" size="sm" onClick={handleSignOut}>
                     <LogOut className="h-4 w-4 mr-2" />

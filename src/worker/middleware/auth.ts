@@ -1,5 +1,6 @@
 import { Context, Next } from "hono";
 import { betterAuth } from "better-auth";
+import { admin as adminPlugin } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createDb } from "../../db/db";
 
@@ -35,6 +36,7 @@ export async function requireAuth(
       baseURL: baseURL,
       secret:
         c.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
+      plugins: [adminPlugin()],
     });
 
     const session = await auth.api.getSession({

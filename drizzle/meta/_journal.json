@@ -15,6 +15,13 @@
       "when": 1760670135943,
       "tag": "0001_closed_morlocks",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1760705113062,
+      "tag": "0002_amusing_ultimo",
+      "breakpoints": true
     }
   ]
 }

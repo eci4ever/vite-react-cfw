@@ -10,19 +10,25 @@ import {
 import { Users, Database, Zap, LogIn } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
+interface Session {
+  user: {
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    role?: string;
+  };
+}
+
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    const { data: session } = await authClient.getSession();
+    return session;
+  },
   component: Home,
 });
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
 function Home() {
-  const { data: session } = authClient.useSession();
-
+  const session = Route.useLoaderData();
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="text-center mb-12">
@@ -33,8 +39,14 @@ function Home() {
         {session ? (
           <div className="space-y-4">
             <p className="text-lg text-green-600">
-              Welcome back, {session.user.name}!
+              Welcome back, {(session as Session).user.name}!
             </p>
+            <div className="text-sm text-gray-600">
+              Role:{" "}
+              <span className="font-semibold text-blue-600 capitalize">
+                {(session as Session).user.role || "user"}
+              </span>
+            </div>
             <Link to="/users">
               <Button size="lg" className="text-lg px-8 py-3">
                 <Users className="h-5 w-5 mr-2" />

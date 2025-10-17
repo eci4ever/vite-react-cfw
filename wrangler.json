@@ -21,5 +21,6 @@
   ],
   "vars": {
     "BETTER_AUTH_SECRET": "82zuBxij1IgS8q8KfrVHLaNcTpgbFzDQ"
-  }
+  },
+  "preview_urls": true
 }

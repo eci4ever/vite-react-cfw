@@ -15,6 +15,7 @@ interface User {
   email: string;
   emailVerified: boolean;
   image?: string;
+  role?: string;
 }
 
 function Auth() {
@@ -52,6 +53,12 @@ function Auth() {
           <div className="text-gray-600">Email: {session.user.email}</div>
           <div className="text-sm text-gray-500">
             Email Verified: {session.user.emailVerified ? "Yes" : "No"}
+          </div>
+          <div className="text-sm">
+            Role:{" "}
+            <span className="font-semibold text-blue-600 capitalize">
+              {session.user.role || "user"}
+            </span>
           </div>
           <Button
             onClick={handleSignOut}

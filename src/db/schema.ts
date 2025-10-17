@@ -14,6 +14,11 @@ export const user = sqliteTable("user", {
   email: text().notNull().unique(),
   emailVerified: int({ mode: "boolean" }).notNull().default(false),
   image: text(),
+  // Admin plugin fields
+  role: text().default("user"),
+  banned: int({ mode: "boolean" }).default(false),
+  banReason: text(),
+  banExpires: int({ mode: "timestamp" }),
   createdAt: int({ mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
@@ -26,6 +31,8 @@ export const session = sqliteTable("session", {
   id: text().primaryKey(),
   expiresAt: int({ mode: "timestamp" }).notNull(),
   token: text().notNull().unique(),
+  // Admin plugin field
+  impersonatedBy: text(),
   createdAt: int({ mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
