@@ -1,8 +1,5 @@
 import { Hono } from "hono";
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { createDb } from "../../db/db";
-import { admin as adminPlugin } from "better-auth/plugins";
+import { getAuthInstance } from "../auth-instance";
 
 type Bindings = {
   d1_vite_react: D1Database;
@@ -11,40 +8,12 @@ type Bindings = {
 
 const authRoute = new Hono<{ Bindings: Bindings }>();
 
-// Create auth instance with database from context
+// Use singleton auth instance for better performance
 authRoute.all("/api/auth/*", async (c) => {
-  const db = createDb(c.env.d1_vite_react);
-
-  // Get the request URL to determine the base URL dynamically
   const url = new URL(c.req.url);
   const baseURL = `${url.protocol}//${url.host}`;
 
-  const auth = betterAuth({
-    database: drizzleAdapter(db, {
-      provider: "sqlite",
-    }),
-    emailAndPassword: {
-      enabled: true,
-    },
-    user: {
-      additionalFields: {
-        role: {
-          type: "string",
-          defaultValue: "user",
-          required: true,
-        },
-      },
-    },
-    plugins: [
-      adminPlugin({
-        adminRoles: ["admin"],
-      }),
-    ],
-    trustedOrigins: [baseURL],
-    baseURL: baseURL,
-    secret: c.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
-  });
-
+  const auth = getAuthInstance(c.env, baseURL);
   return auth.handler(c.req.raw);
 });
 

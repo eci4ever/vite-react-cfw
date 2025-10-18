@@ -1,8 +1,5 @@
 import { Context, Next } from "hono";
-import { betterAuth } from "better-auth";
-import { admin as adminPlugin } from "better-auth/plugins";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { createDb } from "../../db/db";
+import { getAuthInstance } from "../auth-instance";
 
 type Bindings = {
   d1_vite_react: D1Database;
@@ -19,35 +16,10 @@ export async function requireAuth(
   next: Next
 ) {
   try {
-    const db = createDb(c.env.d1_vite_react);
-
-    // Get the request URL to determine the base URL dynamically
     const url = new URL(c.req.url);
     const baseURL = `${url.protocol}//${url.host}`;
 
-    const auth = betterAuth({
-      database: drizzleAdapter(db, {
-        provider: "sqlite",
-      }),
-      emailAndPassword: {
-        enabled: true,
-      },
-      user: {
-        additionalFields: {
-          role: {
-            type: "string",
-            defaultValue: "user",
-            required: true,
-          },
-        },
-      },
-      trustedOrigins: [baseURL],
-      baseURL: baseURL,
-      secret:
-        c.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
-      plugins: [adminPlugin()],
-    });
-
+    const auth = getAuthInstance(c.env, baseURL);
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,
     });
@@ -71,25 +43,10 @@ export async function optionalAuth(
   next: Next
 ) {
   try {
-    const db = createDb(c.env.d1_vite_react);
-
-    // Get the request URL to determine the base URL dynamically
     const url = new URL(c.req.url);
     const baseURL = `${url.protocol}//${url.host}`;
 
-    const auth = betterAuth({
-      database: drizzleAdapter(db, {
-        provider: "sqlite",
-      }),
-      emailAndPassword: {
-        enabled: true,
-      },
-      trustedOrigins: [baseURL],
-      baseURL: baseURL,
-      secret:
-        c.env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
-    });
-
+    const auth = getAuthInstance(c.env, baseURL);
     const session = await auth.api.getSession({
       headers: c.req.raw.headers,
     });
