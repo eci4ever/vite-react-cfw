@@ -85,7 +85,9 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigate({ to: "/dashboard/account" })}
+              >
                 <IconUserCircle />
                 Account
               </DropdownMenuItem>
