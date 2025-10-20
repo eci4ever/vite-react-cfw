@@ -1,0 +1,96 @@
+# Customer API Endpoints Test
+# Note: These requests require authentication. 
+# In production, include the session cookie from Better Auth.
+
+### Get all customers
+GET http://localhost:5173/api/customers
+Cookie: better-auth.session_token=<your-session-token>
+
+### Get customer by ID
+GET http://localhost:5173/api/customers/cust_123456
+Cookie: better-auth.session_token=<your-session-token>
+
+### Create new customer
+POST http://localhost:5173/api/customers
+Content-Type: application/json
+Cookie: better-auth.session_token=<your-session-token>
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "image_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+}
+
+### Create another customer
+POST http://localhost:5173/api/customers
+Content-Type: application/json
+Cookie: better-auth.session_token=<your-session-token>
+
+{
+  "name": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "image_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jane"
+}
+
+### Create customer without image
+POST http://localhost:5173/api/customers
+Content-Type: application/json
+Cookie: better-auth.session_token=<your-session-token>
+
+{
+  "name": "Bob Johnson",
+  "email": "bob.johnson@example.com"
+}
+
+### Update customer
+PUT http://localhost:5173/api/customers/cust_123456
+Content-Type: application/json
+Cookie: better-auth.session_token=<your-session-token>
+
+{
+  "name": "John Doe Updated",
+  "email": "john.updated@example.com",
+  "image_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=JohnUpdated"
+}
+
+### Delete customer
+DELETE http://localhost:5173/api/customers/cust_123456
+Cookie: better-auth.session_token=<your-session-token>
+
+###
+# API Response Examples:
+
+# Success - Get all customers (200 OK):
+# [
+#   {
+#     "id": "cust_1234567890_abc123",
+#     "name": "John Doe",
+#     "email": "john.doe@example.com",
+#     "image_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+#     "createdAt": "2025-06-17T10:00:00.000Z",
+#     "updatedAt": "2025-06-17T10:00:00.000Z"
+#   }
+# ]
+
+# Success - Create customer (201 Created):
+# {
+#   "id": "cust_1234567890_abc123",
+#   "name": "John Doe",
+#   "email": "john.doe@example.com",
+#   "image_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+#   "createdAt": "2025-06-17T10:00:00.000Z",
+#   "updatedAt": "2025-06-17T10:00:00.000Z"
+# }
+
+# Error - Unauthorized (401):
+# { "error": "Unauthorized" }
+
+# Error - Validation (400):
+# { "error": "name and email are required" }
+# { "error": "invalid email format" }
+
+# Error - Duplicate email (409):
+# { "error": "Email already exists" }
+
+# Error - Not found (404):
+# { "error": "Customer not found" }
