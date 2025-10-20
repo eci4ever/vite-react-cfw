@@ -174,14 +174,14 @@ function RouteComponent() {
     if (!selectedUser) return;
 
     try {
-      // Note: Better Auth doesn't have a direct updateUser method in admin client
-      // We'll need to use setRole for role changes and handle other updates differently
-      if (editUserData.role !== selectedUser.role) {
-        await authClient.admin.setRole({
-          userId: selectedUser.id,
+      await authClient.admin.updateUser({
+        userId: selectedUser.id,
+        data: {
+          name: editUserData.name,
+          email: editUserData.email,
           role: editUserData.role,
-        });
-      }
+        },
+      });
 
       toast.success("User updated successfully");
       setEditUserOpen(false);
