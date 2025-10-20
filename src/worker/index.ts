@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import usersRoute from "./routes/users";
 import authRoute from "./routes/auth";
 import customersRoute from "./routes/customers";
+import invoicesRoute from "./routes/invoices";
 
 type Bindings = {
   d1_vite_react: D1Database;
@@ -19,5 +20,8 @@ app.route("/api/users", usersRoute);
 
 // Mount the customers routes
 app.route("/api/customers", customersRoute);
+
+// Mount the invoices routes
+app.route("/api/invoices", invoicesRoute);
 
 export default app;
