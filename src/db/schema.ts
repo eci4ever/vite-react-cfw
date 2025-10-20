@@ -1,4 +1,4 @@
-import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, sqliteTable, text, real } from "drizzle-orm/sqlite-core";
 
 export const usersTable = sqliteTable("users_table", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -73,6 +73,48 @@ export const verification = sqliteTable("verification", {
   identifier: text().notNull(),
   value: text().notNull(),
   expiresAt: int({ mode: "timestamp" }).notNull(),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
+// Business tables
+export const customers = sqliteTable("customers", {
+  id: text().primaryKey(),
+  name: text().notNull(),
+  email: text().notNull().unique(),
+  image_url: text(),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
+export const invoices = sqliteTable("invoices", {
+  id: text().primaryKey(),
+  customer_id: text()
+    .notNull()
+    .references(() => customers.id, { onDelete: "cascade" }),
+  amount: real().notNull(),
+  date: int({ mode: "timestamp" }).notNull(),
+  status: text().notNull().$type<"pending" | "paid">().default("pending"),
+  createdAt: int({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: int({ mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
+
+export const revenue = sqliteTable("revenue", {
+  id: int().primaryKey({ autoIncrement: true }),
+  month: text().notNull(),
+  revenue: real().notNull(),
   createdAt: int({ mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
