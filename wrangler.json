@@ -20,7 +20,8 @@
     }
   ],
   "vars": {
-    "BETTER_AUTH_SECRET": "82zuBxij1IgS8q8KfrVHLaNcTpgbFzDQ"
+    "BETTER_AUTH_SECRET": "82zuBxij1IgS8q8KfrVHLaNcTpgbFzDQ",
+    "BETTER_AUTH_URL": "https://vite-react-cfw.eci4ever.workers.dev"
   },
   "preview_urls": true
 }

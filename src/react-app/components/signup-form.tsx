@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 export function SignupForm({
   className,
@@ -37,7 +38,9 @@ export function SignupForm({
     });
     if (result.error) {
       console.error(result.error);
+      toast.error(result.error.message ?? "Failed to sign up");
     } else {
+      toast.success("Account created successfully");
       navigate({ to: "/dashboard" });
     }
   };

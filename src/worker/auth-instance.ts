@@ -35,7 +35,7 @@ export function getAuthInstance(
       ],
       trustedOrigins: [baseURL],
       baseURL: baseURL,
-      secret: env.BETTER_AUTH_SECRET || "your-secret-key-change-in-production",
+      secret: env.BETTER_AUTH_SECRET,
     });
   }
 

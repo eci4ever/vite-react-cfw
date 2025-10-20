@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 export function SigninForm({
   className,
@@ -34,7 +35,9 @@ export function SigninForm({
     });
     if (result.error) {
       console.error(result.error);
+      toast.error(result.error.message ?? "Failed to sign in");
     } else {
+      toast.success("Signed in successfully");
       navigate({ to: "/dashboard" });
     }
   };
