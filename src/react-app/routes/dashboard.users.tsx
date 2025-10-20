@@ -21,14 +21,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -490,25 +490,24 @@ function RouteComponent() {
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Drawer
+              <Dialog
                 open={addUserOpen}
                 onOpenChange={setAddUserOpen}
-                direction="right"
               >
-                <DrawerTrigger asChild>
+                <DialogTrigger asChild>
                   <Button>
                     <IconPlus className="mr-2 h-4 w-4" />
                     Add User
                   </Button>
-                </DrawerTrigger>
-                <DrawerContent className="w-full max-w-md h-full max-h-screen overflow-y-auto">
-                  <DrawerHeader className="pb-4">
-                    <DrawerTitle>Create New User</DrawerTitle>
-                    <DrawerDescription>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle>Create New User</DialogTitle>
+                    <DialogDescription>
                       Add a new user to the system with appropriate permissions.
-                    </DrawerDescription>
-                  </DrawerHeader>
-                  <div className="space-y-4 px-6 pb-6">
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
                     <div className="grid gap-2">
                       <Label htmlFor="name">Name</Label>
                       <Input
@@ -574,22 +573,19 @@ function RouteComponent() {
                       </Select>
                     </div>
                   </div>
-                  <DrawerFooter className="px-6 pt-4 border-t">
-                    <div className="flex gap-2 w-full">
-                      <Button
-                        variant="outline"
-                        onClick={() => setAddUserOpen(false)}
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                      <Button onClick={handleCreateUser} className="flex-1">
-                        Create User
-                      </Button>
-                    </div>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setAddUserOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreateUser}>
+                      Create User
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </CardHeader>
@@ -688,9 +684,9 @@ function RouteComponent() {
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                         </TableHead>
                       );
                     })}
@@ -761,19 +757,18 @@ function RouteComponent() {
       </Card>
 
       {/* Edit User Dialog */}
-      <Drawer
+      <Dialog
         open={editUserOpen}
         onOpenChange={setEditUserOpen}
-        direction="right"
       >
-        <DrawerContent className="w-full max-w-md h-full max-h-screen overflow-y-auto">
-          <DrawerHeader className="pb-4">
-            <DrawerTitle>Edit User</DrawerTitle>
-            <DrawerDescription>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
               Update user information and permissions.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="space-y-4 px-6 pb-6">
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-name">Name</Label>
               <Input
@@ -816,22 +811,19 @@ function RouteComponent() {
               </Select>
             </div>
           </div>
-          <DrawerFooter className="px-6 pt-4 border-t">
-            <div className="flex gap-2 w-full">
-              <Button
-                variant="outline"
-                onClick={() => setEditUserOpen(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleEditUser} className="flex-1">
-                Save Changes
-              </Button>
-            </div>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setEditUserOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleEditUser}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

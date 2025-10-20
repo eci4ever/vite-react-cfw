@@ -11,14 +11,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -517,25 +517,24 @@ function RouteComponent() {
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Drawer
+              <Dialog
                 open={addInvoiceOpen}
                 onOpenChange={setAddInvoiceOpen}
-                direction="right"
               >
-                <DrawerTrigger asChild>
+                <DialogTrigger asChild>
                   <Button>
                     <IconPlus className="mr-2 h-4 w-4" />
                     Add Invoice
                   </Button>
-                </DrawerTrigger>
-                <DrawerContent className="w-full max-w-md h-full max-h-screen overflow-y-auto">
-                  <DrawerHeader className="pb-4">
-                    <DrawerTitle>Create New Invoice</DrawerTitle>
-                    <DrawerDescription>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle>Create New Invoice</DialogTitle>
+                    <DialogDescription>
                       Add a new invoice to the system.
-                    </DrawerDescription>
-                  </DrawerHeader>
-                  <div className="space-y-4 px-6 pb-6">
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
                     <div className="grid gap-2">
                       <Label htmlFor="customer">Customer</Label>
                       <Select
@@ -611,22 +610,19 @@ function RouteComponent() {
                       </Select>
                     </div>
                   </div>
-                  <DrawerFooter className="px-6 pt-4 border-t">
-                    <div className="flex gap-2 w-full">
-                      <Button
-                        variant="outline"
-                        onClick={() => setAddInvoiceOpen(false)}
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                      <Button onClick={handleCreateInvoice} className="flex-1">
-                        Create Invoice
-                      </Button>
-                    </div>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setAddInvoiceOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreateInvoice}>
+                      Create Invoice
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </CardHeader>
@@ -765,17 +761,16 @@ function RouteComponent() {
       </Card>
 
       {/* Edit Invoice Dialog */}
-      <Drawer
+      <Dialog
         open={editInvoiceOpen}
         onOpenChange={setEditInvoiceOpen}
-        direction="right"
       >
-        <DrawerContent className="w-full max-w-md h-full max-h-screen overflow-y-auto">
-          <DrawerHeader className="pb-4">
-            <DrawerTitle>Edit Invoice</DrawerTitle>
-            <DrawerDescription>Update invoice information.</DrawerDescription>
-          </DrawerHeader>
-          <div className="space-y-4 px-6 pb-6">
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit Invoice</DialogTitle>
+            <DialogDescription>Update invoice information.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-customer">Customer</Label>
               <Select
@@ -847,22 +842,19 @@ function RouteComponent() {
               </Select>
             </div>
           </div>
-          <DrawerFooter className="px-6 pt-4 border-t">
-            <div className="flex gap-2 w-full">
-              <Button
-                variant="outline"
-                onClick={() => setEditInvoiceOpen(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleEditInvoice} className="flex-1">
-                Save Changes
-              </Button>
-            </div>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setEditInvoiceOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleEditInvoice}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

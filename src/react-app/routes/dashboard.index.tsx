@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useState } from "react"
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
 import {
   Card,
@@ -17,6 +18,18 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export const Route = createFileRoute("/dashboard/")({
   component: Dashboard,
@@ -125,6 +138,10 @@ const priorityVariants: Record<string, "default" | "destructive" | "outline" | "
 }
 
 function Dashboard() {
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false)
+  const [isInvoiceDialogOpen, setIsInvoiceDialogOpen] = useState(false)
+  const [isCustomerDialogOpen, setIsCustomerDialogOpen] = useState(false)
+
   // Calculate statistics
   const totalRevenue = revenueData.reduce((sum, item) => sum + item.revenue, 0)
   const totalExpenses = revenueData.reduce((sum, item) => sum + item.expenses, 0)
@@ -474,9 +491,214 @@ function Dashboard() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
-            <Button>+ New Project</Button>
-            <Button variant="outline">Create Invoice</Button>
-            <Button variant="outline">Add Customer</Button>
+            {/* New Project Dialog */}
+            <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>+ New Project</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Create New Project</DialogTitle>
+                  <DialogDescription>
+                    Add a new project to your workspace. Fill in the details below.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="project-name">Project Name</Label>
+                    <Input id="project-name" placeholder="Enter project name" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="project-description">Description</Label>
+                    <Input id="project-description" placeholder="Enter project description" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="project-status">Status</Label>
+                    <Select defaultValue="planning">
+                      <SelectTrigger id="project-status">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="planning">Planning</SelectItem>
+                        <SelectItem value="in-progress">In Progress</SelectItem>
+                        <SelectItem value="on-hold">On Hold</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="project-priority">Priority</Label>
+                    <Select defaultValue="medium">
+                      <SelectTrigger id="project-priority">
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                        <SelectItem value="critical">Critical</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="project-budget">Budget ($)</Label>
+                      <Input id="project-budget" type="number" placeholder="0" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="project-progress">Progress (%)</Label>
+                      <Input id="project-progress" type="number" placeholder="0" min="0" max="100" />
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsProjectDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setIsProjectDialogOpen(false)}>
+                    Create Project
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {/* Create Invoice Dialog */}
+            <Dialog open={isInvoiceDialogOpen} onOpenChange={setIsInvoiceDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">Create Invoice</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Create New Invoice</DialogTitle>
+                  <DialogDescription>
+                    Generate a new invoice for your client. Fill in the details below.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="invoice-customer">Customer</Label>
+                    <Select>
+                      <SelectTrigger id="invoice-customer">
+                        <SelectValue placeholder="Select customer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="customer1">Acme Corporation</SelectItem>
+                        <SelectItem value="customer2">Tech Solutions Inc</SelectItem>
+                        <SelectItem value="customer3">Global Enterprises</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="invoice-project">Project</Label>
+                    <Select>
+                      <SelectTrigger id="invoice-project">
+                        <SelectValue placeholder="Select project" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="project1">E-Commerce Platform</SelectItem>
+                        <SelectItem value="project2">Mobile App Development</SelectItem>
+                        <SelectItem value="project3">Analytics Dashboard</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="invoice-amount">Amount ($)</Label>
+                      <Input id="invoice-amount" type="number" placeholder="0.00" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="invoice-date">Due Date</Label>
+                      <Input id="invoice-date" type="date" />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="invoice-description">Description</Label>
+                    <Input id="invoice-description" placeholder="Invoice description" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="invoice-status">Status</Label>
+                    <Select defaultValue="pending">
+                      <SelectTrigger id="invoice-status">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="paid">Paid</SelectItem>
+                        <SelectItem value="overdue">Overdue</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsInvoiceDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setIsInvoiceDialogOpen(false)}>
+                    Create Invoice
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {/* Add Customer Dialog */}
+            <Dialog open={isCustomerDialogOpen} onOpenChange={setIsCustomerDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">Add Customer</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Add New Customer</DialogTitle>
+                  <DialogDescription>
+                    Add a new customer to your system. Fill in the details below.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="customer-name">Company Name</Label>
+                    <Input id="customer-name" placeholder="Enter company name" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="customer-contact">Contact Person</Label>
+                    <Input id="customer-contact" placeholder="Enter contact name" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="customer-email">Email</Label>
+                    <Input id="customer-email" type="email" placeholder="email@example.com" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="customer-phone">Phone</Label>
+                    <Input id="customer-phone" type="tel" placeholder="+1 (555) 123-4567" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="customer-address">Address</Label>
+                    <Input id="customer-address" placeholder="Enter address" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="customer-type">Customer Type</Label>
+                    <Select defaultValue="business">
+                      <SelectTrigger id="customer-type">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="business">Business</SelectItem>
+                        <SelectItem value="individual">Individual</SelectItem>
+                        <SelectItem value="enterprise">Enterprise</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsCustomerDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setIsCustomerDialogOpen(false)}>
+                    Add Customer
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
             <Button variant="outline">Upload File</Button>
             <Button variant="outline">Generate Report</Button>
           </div>

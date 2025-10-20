@@ -11,14 +11,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -434,25 +434,24 @@ function RouteComponent() {
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Drawer
+              <Dialog
                 open={addCustomerOpen}
                 onOpenChange={setAddCustomerOpen}
-                direction="right"
               >
-                <DrawerTrigger asChild>
+                <DialogTrigger asChild>
                   <Button>
                     <IconPlus className="mr-2 h-4 w-4" />
                     Add Customer
                   </Button>
-                </DrawerTrigger>
-                <DrawerContent className="w-full max-w-md h-full max-h-screen overflow-y-auto">
-                  <DrawerHeader className="pb-4">
-                    <DrawerTitle>Create New Customer</DrawerTitle>
-                    <DrawerDescription>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle>Create New Customer</DialogTitle>
+                    <DialogDescription>
                       Add a new customer to the system.
-                    </DrawerDescription>
-                  </DrawerHeader>
-                  <div className="space-y-4 px-6 pb-6">
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
                     <div className="grid gap-2">
                       <Label htmlFor="name">Name</Label>
                       <Input
@@ -498,22 +497,19 @@ function RouteComponent() {
                       />
                     </div>
                   </div>
-                  <DrawerFooter className="px-6 pt-4 border-t">
-                    <div className="flex gap-2 w-full">
-                      <Button
-                        variant="outline"
-                        onClick={() => setAddCustomerOpen(false)}
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                      <Button onClick={handleCreateCustomer} className="flex-1">
-                        Create Customer
-                      </Button>
-                    </div>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setAddCustomerOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onClick={handleCreateCustomer}>
+                      Create Customer
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </CardHeader>
@@ -631,19 +627,18 @@ function RouteComponent() {
       </Card>
 
       {/* Edit Customer Dialog */}
-      <Drawer
+      <Dialog
         open={editCustomerOpen}
         onOpenChange={setEditCustomerOpen}
-        direction="right"
       >
-        <DrawerContent className="w-full max-w-md h-full max-h-screen overflow-y-auto">
-          <DrawerHeader className="pb-4">
-            <DrawerTitle>Edit Customer</DrawerTitle>
-            <DrawerDescription>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Edit Customer</DialogTitle>
+            <DialogDescription>
               Update customer information.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="space-y-4 px-6 pb-6">
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-name">Name</Label>
               <Input
@@ -686,22 +681,19 @@ function RouteComponent() {
               />
             </div>
           </div>
-          <DrawerFooter className="px-6 pt-4 border-t">
-            <div className="flex gap-2 w-full">
-              <Button
-                variant="outline"
-                onClick={() => setEditCustomerOpen(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button onClick={handleEditCustomer} className="flex-1">
-                Save Changes
-              </Button>
-            </div>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setEditCustomerOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleEditCustomer}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
