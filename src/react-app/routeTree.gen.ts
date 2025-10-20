@@ -17,6 +17,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardUsersRouteImport } from './routes/dashboard.users'
+import { Route as DashboardProjectsRouteImport } from './routes/dashboard.projects'
+import { Route as DashboardInvoicesRouteImport } from './routes/dashboard.invoices'
+import { Route as DashboardCustomersRouteImport } from './routes/dashboard.customers'
+import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard.analytics'
 
 const UsersRoute = UsersRouteImport.update({
   id: '/users',
@@ -58,6 +63,31 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardUsersRoute = DashboardUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProjectsRoute = DashboardProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInvoicesRoute = DashboardInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCustomersRoute = DashboardCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -67,6 +97,11 @@ export interface FileRoutesByFullPath {
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/users': typeof UsersRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/customers': typeof DashboardCustomersRoute
+  '/dashboard/invoices': typeof DashboardInvoicesRoute
+  '/dashboard/projects': typeof DashboardProjectsRoute
+  '/dashboard/users': typeof DashboardUsersRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +111,11 @@ export interface FileRoutesByTo {
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/users': typeof UsersRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/customers': typeof DashboardCustomersRoute
+  '/dashboard/invoices': typeof DashboardInvoicesRoute
+  '/dashboard/projects': typeof DashboardProjectsRoute
+  '/dashboard/users': typeof DashboardUsersRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -87,6 +127,11 @@ export interface FileRoutesById {
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/users': typeof UsersRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/customers': typeof DashboardCustomersRoute
+  '/dashboard/invoices': typeof DashboardInvoicesRoute
+  '/dashboard/projects': typeof DashboardProjectsRoute
+  '/dashboard/users': typeof DashboardUsersRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -99,9 +144,26 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/users'
+    | '/dashboard/analytics'
+    | '/dashboard/customers'
+    | '/dashboard/invoices'
+    | '/dashboard/projects'
+    | '/dashboard/users'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/auth' | '/signin' | '/signup' | '/users' | '/dashboard'
+  to:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/signin'
+    | '/signup'
+    | '/users'
+    | '/dashboard/analytics'
+    | '/dashboard/customers'
+    | '/dashboard/invoices'
+    | '/dashboard/projects'
+    | '/dashboard/users'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -111,6 +173,11 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/users'
+    | '/dashboard/analytics'
+    | '/dashboard/customers'
+    | '/dashboard/invoices'
+    | '/dashboard/projects'
+    | '/dashboard/users'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -182,14 +249,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/users': {
+      id: '/dashboard/users'
+      path: '/users'
+      fullPath: '/dashboard/users'
+      preLoaderRoute: typeof DashboardUsersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/projects': {
+      id: '/dashboard/projects'
+      path: '/projects'
+      fullPath: '/dashboard/projects'
+      preLoaderRoute: typeof DashboardProjectsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/invoices': {
+      id: '/dashboard/invoices'
+      path: '/invoices'
+      fullPath: '/dashboard/invoices'
+      preLoaderRoute: typeof DashboardInvoicesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/customers': {
+      id: '/dashboard/customers'
+      path: '/customers'
+      fullPath: '/dashboard/customers'
+      preLoaderRoute: typeof DashboardCustomersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/analytics': {
+      id: '/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardCustomersRoute: typeof DashboardCustomersRoute
+  DashboardInvoicesRoute: typeof DashboardInvoicesRoute
+  DashboardProjectsRoute: typeof DashboardProjectsRoute
+  DashboardUsersRoute: typeof DashboardUsersRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardCustomersRoute: DashboardCustomersRoute,
+  DashboardInvoicesRoute: DashboardInvoicesRoute,
+  DashboardProjectsRoute: DashboardProjectsRoute,
+  DashboardUsersRoute: DashboardUsersRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
