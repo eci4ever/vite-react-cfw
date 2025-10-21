@@ -1,22 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { useState } from "react"
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+} from "@/components/ui/chart";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -25,14 +25,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Route = createFileRoute("/dashboard/")({
   component: Dashboard,
-})
+});
 
 // Mock data for dashboard
 const revenueData = [
@@ -42,14 +48,14 @@ const revenueData = [
   { month: "Apr", revenue: 61000, expenses: 35000 },
   { month: "May", revenue: 55000, expenses: 32000 },
   { month: "Jun", revenue: 67000, expenses: 38000 },
-]
+];
 
 const projectsData = [
   { name: "E-Commerce", progress: 65, status: "on-track" },
   { name: "Mobile App", progress: 45, status: "at-risk" },
   { name: "Analytics", progress: 100, status: "completed" },
   { name: "CRM Integration", progress: 15, status: "delayed" },
-]
+];
 
 const recentActivities = [
   {
@@ -92,21 +98,45 @@ const recentActivities = [
     project: "Marketing Site",
     time: "1 day ago",
   },
-]
+];
 
 const upcomingTasks = [
-  { id: 1, title: "Client Presentation", due: "Today", priority: "high", project: "E-Commerce" },
-  { id: 2, title: "Code Review", due: "Tomorrow", priority: "medium", project: "Mobile App" },
-  { id: 3, title: "Design Mockups", due: "Nov 2", priority: "high", project: "Analytics" },
-  { id: 4, title: "Testing Phase", due: "Nov 5", priority: "low", project: "CRM Integration" },
-]
+  {
+    id: 1,
+    title: "Client Presentation",
+    due: "Today",
+    priority: "high",
+    project: "E-Commerce",
+  },
+  {
+    id: 2,
+    title: "Code Review",
+    due: "Tomorrow",
+    priority: "medium",
+    project: "Mobile App",
+  },
+  {
+    id: 3,
+    title: "Design Mockups",
+    due: "Nov 2",
+    priority: "high",
+    project: "Analytics",
+  },
+  {
+    id: 4,
+    title: "Testing Phase",
+    due: "Nov 5",
+    priority: "low",
+    project: "CRM Integration",
+  },
+];
 
 const teamMembers = [
   { name: "Alice Johnson", role: "Lead Designer", tasks: 8, completed: 6 },
   { name: "Bob Smith", role: "Frontend Dev", tasks: 12, completed: 9 },
   { name: "Carol White", role: "Backend Dev", tasks: 10, completed: 7 },
   { name: "David Lee", role: "iOS Developer", tasks: 9, completed: 5 },
-]
+];
 
 const chartConfig = {
   revenue: {
@@ -121,52 +151,66 @@ const chartConfig = {
     label: "Progress",
     color: "hsl(var(--primary))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 const statusColors: Record<string, string> = {
   "on-track": "bg-green-500",
   "at-risk": "bg-yellow-500",
-  "delayed": "bg-red-500",
-  "completed": "bg-blue-500",
-}
+  delayed: "bg-red-500",
+  completed: "bg-blue-500",
+};
 
-const priorityVariants: Record<string, "default" | "destructive" | "outline" | "secondary"> = {
-  "high": "destructive",
-  "medium": "default",
-  "low": "secondary",
-}
+const priorityVariants: Record<
+  string,
+  "default" | "destructive" | "outline" | "secondary"
+> = {
+  high: "destructive",
+  medium: "default",
+  low: "secondary",
+};
 
 function Dashboard() {
-  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false)
-  const [isInvoiceDialogOpen, setIsInvoiceDialogOpen] = useState(false)
-  const [isCustomerDialogOpen, setIsCustomerDialogOpen] = useState(false)
+  const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
+  const [isInvoiceDialogOpen, setIsInvoiceDialogOpen] = useState(false);
+  const [isCustomerDialogOpen, setIsCustomerDialogOpen] = useState(false);
 
   // Calculate statistics
-  const totalRevenue = revenueData.reduce((sum, item) => sum + item.revenue, 0)
-  const totalExpenses = revenueData.reduce((sum, item) => sum + item.expenses, 0)
-  const netProfit = totalRevenue - totalExpenses
-  const profitMargin = ((netProfit / totalRevenue) * 100).toFixed(1)
+  const totalRevenue = revenueData.reduce((sum, item) => sum + item.revenue, 0);
+  const totalExpenses = revenueData.reduce(
+    (sum, item) => sum + item.expenses,
+    0
+  );
+  const netProfit = totalRevenue - totalExpenses;
+  const profitMargin = ((netProfit / totalRevenue) * 100).toFixed(1);
 
-  const activeProjects = projectsData.filter(p => p.status !== "completed").length
-  const completedProjects = projectsData.filter(p => p.status === "completed").length
-  const avgProgress = Math.round(projectsData.reduce((sum, p) => sum + p.progress, 0) / projectsData.length)
+  const activeProjects = projectsData.filter(
+    (p) => p.status !== "completed"
+  ).length;
+  const completedProjects = projectsData.filter(
+    (p) => p.status === "completed"
+  ).length;
+  const avgProgress = Math.round(
+    projectsData.reduce((sum, p) => sum + p.progress, 0) / projectsData.length
+  );
 
-  const totalTasks = teamMembers.reduce((sum, m) => sum + m.tasks, 0)
-  const completedTasks = teamMembers.reduce((sum, m) => sum + m.completed, 0)
+  const totalTasks = teamMembers.reduce((sum, m) => sum + m.tasks, 0);
+  const completedTasks = teamMembers.reduce((sum, m) => sum + m.completed, 0);
 
   return (
-    <div className="flex flex-col gap-6 p-4 lg:p-6">
+    <div className="flex flex-col gap-4 sm:gap-6 p-3 sm:p-4 lg:p-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
+      <div className="flex flex-col gap-2 sm:gap-3">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
+          Dashboard
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Welcome back! Here's what's happening with your projects today.
         </p>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="hover:shadow-md transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <svg
@@ -183,16 +227,20 @@ function Dashboard() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${(totalRevenue / 1000).toFixed(0)}K</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              ${(totalRevenue / 1000).toFixed(0)}K
+            </div>
             <p className="text-xs text-muted-foreground">
               +{profitMargin}% from last month
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Projects
+            </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -209,16 +257,20 @@ function Dashboard() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{activeProjects}</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              {activeProjects}
+            </div>
             <p className="text-xs text-muted-foreground">
               {completedProjects} completed this month
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tasks Progress</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Tasks Progress
+            </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -233,14 +285,16 @@ function Dashboard() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{completedTasks}/{totalTasks}</div>
+            <div className="text-xl sm:text-2xl font-bold">
+              {completedTasks}/{totalTasks}
+            </div>
             <p className="text-xs text-muted-foreground">
               {Math.round((completedTasks / totalTasks) * 100)}% completion rate
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg Progress</CardTitle>
             <svg
@@ -257,17 +311,15 @@ function Dashboard() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{avgProgress}%</div>
-            <p className="text-xs text-muted-foreground">
-              Across all projects
-            </p>
+            <div className="text-xl sm:text-2xl font-bold">{avgProgress}%</div>
+            <p className="text-xs text-muted-foreground">Across all projects</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Charts Row */}
       <div className="grid gap-4 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
+        <Card className="lg:col-span-4 hover:shadow-md transition-shadow duration-200">
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
             <CardDescription>
@@ -275,7 +327,10 @@ function Dashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px] w-full">
+            <ChartContainer
+              config={chartConfig}
+              className="h-[250px] sm:h-[300px] w-full"
+            >
               <AreaChart data={revenueData}>
                 <defs>
                   <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
@@ -319,7 +374,9 @@ function Dashboard() {
                 <ChartTooltip
                   content={
                     <ChartTooltipContent
-                      formatter={(value) => `$${Number(value).toLocaleString()}`}
+                      formatter={(value) =>
+                        `$${Number(value).toLocaleString()}`
+                      }
                     />
                   }
                 />
@@ -344,7 +401,7 @@ function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-3">
+        <Card className="lg:col-span-3 hover:shadow-md transition-shadow duration-200">
           <CardHeader>
             <CardTitle>Project Status</CardTitle>
             <CardDescription>Current project progress overview</CardDescription>
@@ -354,7 +411,9 @@ function Dashboard() {
               <div key={project.name} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium">{project.name}</span>
-                  <span className="text-muted-foreground">{project.progress}%</span>
+                  <span className="text-muted-foreground">
+                    {project.progress}%
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 bg-secondary rounded-full h-2">
@@ -375,28 +434,36 @@ function Dashboard() {
 
       {/* Recent Activity & Upcoming Tasks */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+        <Card className="hover:shadow-md transition-shadow duration-200">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>Latest updates from your team</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start gap-4">
-                  <Avatar className="h-9 w-9">
+                <div
+                  key={activity.id}
+                  className="flex items-start gap-3 sm:gap-4"
+                >
+                  <Avatar className="h-8 w-8 sm:h-9 sm:w-9">
                     <AvatarFallback className="text-xs">
-                      {activity.user.split(' ').map(n => n[0]).join('')}
+                      {activity.user
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 space-y-1">
-                    <p className="text-sm">
-                      <span className="font-medium">{activity.user}</span>{' '}
-                      <span className="text-muted-foreground">{activity.action}</span>{' '}
+                  <div className="flex-1 space-y-1 min-w-0">
+                    <p className="text-sm leading-relaxed">
+                      <span className="font-medium">{activity.user}</span>{" "}
+                      <span className="text-muted-foreground">
+                        {activity.action}
+                      </span>{" "}
                       <span className="font-medium">{activity.target}</span>
                     </p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{activity.project}</span>
+                      <span className="truncate">{activity.project}</span>
                       <span>•</span>
                       <span>{activity.time}</span>
                     </div>
@@ -407,27 +474,32 @@ function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow duration-200">
           <CardHeader>
             <CardTitle>Upcoming Tasks</CardTitle>
             <CardDescription>Tasks due soon</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {upcomingTasks.map((task) => (
-                <div key={task.id} className="flex items-center gap-4">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-primary">
+                <div key={task.id} className="flex items-center gap-3 sm:gap-4">
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border-2 border-primary flex-shrink-0">
                     <div className="h-2 w-2 rounded-full bg-primary" />
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">{task.title}</p>
-                      <Badge variant={priorityVariants[task.priority]} className="text-xs">
+                  <div className="flex-1 space-y-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-medium truncate">
+                        {task.title}
+                      </p>
+                      <Badge
+                        variant={priorityVariants[task.priority]}
+                        className="text-xs flex-shrink-0"
+                      >
                         {task.priority}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{task.project}</span>
+                      <span className="truncate">{task.project}</span>
                       <span>•</span>
                       <span>Due {task.due}</span>
                     </div>
@@ -440,25 +512,30 @@ function Dashboard() {
       </div>
 
       {/* Team Performance */}
-      <Card>
+      <Card className="hover:shadow-md transition-shadow duration-200">
         <CardHeader>
           <CardTitle>Team Performance</CardTitle>
           <CardDescription>Individual task completion status</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {teamMembers.map((member) => (
               <Card key={member.name}>
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarFallback>
-                        {member.name.split(' ').map(n => n[0]).join('')}
+                        {member.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <CardTitle className="text-sm">{member.name}</CardTitle>
-                      <CardDescription className="text-xs">{member.role}</CardDescription>
+                      <CardDescription className="text-xs">
+                        {member.role}
+                      </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -466,12 +543,16 @@ function Dashboard() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-muted-foreground">Tasks</span>
-                      <span className="font-medium">{member.completed}/{member.tasks}</span>
+                      <span className="font-medium">
+                        {member.completed}/{member.tasks}
+                      </span>
                     </div>
                     <div className="w-full bg-secondary rounded-full h-2">
                       <div
                         className="h-2 rounded-full bg-primary"
-                        style={{ width: `${(member.completed / member.tasks) * 100}%` }}
+                        style={{
+                          width: `${(member.completed / member.tasks) * 100}%`,
+                        }}
                       />
                     </div>
                   </div>
@@ -483,23 +564,27 @@ function Dashboard() {
       </Card>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="hover:shadow-md transition-shadow duration-200">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
           <CardDescription>Frequently used actions</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             {/* New Project Dialog */}
-            <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
+            <Dialog
+              open={isProjectDialogOpen}
+              onOpenChange={setIsProjectDialogOpen}
+            >
               <DialogTrigger asChild>
-                <Button>+ New Project</Button>
+                <Button className="min-h-[44px]">+ New Project</Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Project</DialogTitle>
                   <DialogDescription>
-                    Add a new project to your workspace. Fill in the details below.
+                    Add a new project to your workspace. Fill in the details
+                    below.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -509,7 +594,10 @@ function Dashboard() {
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="project-description">Description</Label>
-                    <Input id="project-description" placeholder="Enter project description" />
+                    <Input
+                      id="project-description"
+                      placeholder="Enter project description"
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="project-status">Status</Label>
@@ -542,16 +630,29 @@ function Dashboard() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="project-budget">Budget ($)</Label>
-                      <Input id="project-budget" type="number" placeholder="0" />
+                      <Input
+                        id="project-budget"
+                        type="number"
+                        placeholder="0"
+                      />
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="project-progress">Progress (%)</Label>
-                      <Input id="project-progress" type="number" placeholder="0" min="0" max="100" />
+                      <Input
+                        id="project-progress"
+                        type="number"
+                        placeholder="0"
+                        min="0"
+                        max="100"
+                      />
                     </div>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsProjectDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsProjectDialogOpen(false)}
+                  >
                     Cancel
                   </Button>
                   <Button onClick={() => setIsProjectDialogOpen(false)}>
@@ -562,15 +663,21 @@ function Dashboard() {
             </Dialog>
 
             {/* Create Invoice Dialog */}
-            <Dialog open={isInvoiceDialogOpen} onOpenChange={setIsInvoiceDialogOpen}>
+            <Dialog
+              open={isInvoiceDialogOpen}
+              onOpenChange={setIsInvoiceDialogOpen}
+            >
               <DialogTrigger asChild>
-                <Button variant="outline">Create Invoice</Button>
+                <Button variant="outline" className="min-h-[44px]">
+                  Create Invoice
+                </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Invoice</DialogTitle>
                   <DialogDescription>
-                    Generate a new invoice for your client. Fill in the details below.
+                    Generate a new invoice for your client. Fill in the details
+                    below.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -581,9 +688,15 @@ function Dashboard() {
                         <SelectValue placeholder="Select customer" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="customer1">Acme Corporation</SelectItem>
-                        <SelectItem value="customer2">Tech Solutions Inc</SelectItem>
-                        <SelectItem value="customer3">Global Enterprises</SelectItem>
+                        <SelectItem value="customer1">
+                          Acme Corporation
+                        </SelectItem>
+                        <SelectItem value="customer2">
+                          Tech Solutions Inc
+                        </SelectItem>
+                        <SelectItem value="customer3">
+                          Global Enterprises
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -594,16 +707,26 @@ function Dashboard() {
                         <SelectValue placeholder="Select project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="project1">E-Commerce Platform</SelectItem>
-                        <SelectItem value="project2">Mobile App Development</SelectItem>
-                        <SelectItem value="project3">Analytics Dashboard</SelectItem>
+                        <SelectItem value="project1">
+                          E-Commerce Platform
+                        </SelectItem>
+                        <SelectItem value="project2">
+                          Mobile App Development
+                        </SelectItem>
+                        <SelectItem value="project3">
+                          Analytics Dashboard
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="invoice-amount">Amount ($)</Label>
-                      <Input id="invoice-amount" type="number" placeholder="0.00" />
+                      <Input
+                        id="invoice-amount"
+                        type="number"
+                        placeholder="0.00"
+                      />
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="invoice-date">Due Date</Label>
@@ -612,7 +735,10 @@ function Dashboard() {
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="invoice-description">Description</Label>
-                    <Input id="invoice-description" placeholder="Invoice description" />
+                    <Input
+                      id="invoice-description"
+                      placeholder="Invoice description"
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="invoice-status">Status</Label>
@@ -630,7 +756,10 @@ function Dashboard() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsInvoiceDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsInvoiceDialogOpen(false)}
+                  >
                     Cancel
                   </Button>
                   <Button onClick={() => setIsInvoiceDialogOpen(false)}>
@@ -641,33 +770,53 @@ function Dashboard() {
             </Dialog>
 
             {/* Add Customer Dialog */}
-            <Dialog open={isCustomerDialogOpen} onOpenChange={setIsCustomerDialogOpen}>
+            <Dialog
+              open={isCustomerDialogOpen}
+              onOpenChange={setIsCustomerDialogOpen}
+            >
               <DialogTrigger asChild>
-                <Button variant="outline">Add Customer</Button>
+                <Button variant="outline" className="min-h-[44px]">
+                  Add Customer
+                </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Add New Customer</DialogTitle>
                   <DialogDescription>
-                    Add a new customer to your system. Fill in the details below.
+                    Add a new customer to your system. Fill in the details
+                    below.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
                     <Label htmlFor="customer-name">Company Name</Label>
-                    <Input id="customer-name" placeholder="Enter company name" />
+                    <Input
+                      id="customer-name"
+                      placeholder="Enter company name"
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="customer-contact">Contact Person</Label>
-                    <Input id="customer-contact" placeholder="Enter contact name" />
+                    <Input
+                      id="customer-contact"
+                      placeholder="Enter contact name"
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="customer-email">Email</Label>
-                    <Input id="customer-email" type="email" placeholder="email@example.com" />
+                    <Input
+                      id="customer-email"
+                      type="email"
+                      placeholder="email@example.com"
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="customer-phone">Phone</Label>
-                    <Input id="customer-phone" type="tel" placeholder="+1 (555) 123-4567" />
+                    <Input
+                      id="customer-phone"
+                      type="tel"
+                      placeholder="+1 (555) 123-4567"
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="customer-address">Address</Label>
@@ -688,7 +837,10 @@ function Dashboard() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsCustomerDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCustomerDialogOpen(false)}
+                  >
                     Cancel
                   </Button>
                   <Button onClick={() => setIsCustomerDialogOpen(false)}>
@@ -698,11 +850,15 @@ function Dashboard() {
               </DialogContent>
             </Dialog>
 
-            <Button variant="outline">Upload File</Button>
-            <Button variant="outline">Generate Report</Button>
+            <Button variant="outline" className="min-h-[44px]">
+              Upload File
+            </Button>
+            <Button variant="outline" className="min-h-[44px]">
+              Generate Report
+            </Button>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
